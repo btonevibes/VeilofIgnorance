@@ -263,8 +263,8 @@
                 </div>
                 <div id="resultsArea" class="hidden mt-4 container mx-auto px-4 max-w-screen-md">
                     <h2 class="text-base font-semibold mb-2 text-center text-gray-600">Your Country Preferences</h2>
-                    <ol id="rankedList" class="max-w-lg mx-auto space-y-4 mt-6"></ol>
-                    <div id="analysisArea" class="max-w-2xl mx-auto"></div>
+                    <ol id="rankedList" class="max-w-lg mx-auto space-y-4 mt-2"></ol>
+                    <div id="analysisArea" class="max-w-2xl mx-auto mt-8"></div>
                     <div id="comparisonSection" class="max-w-2xl mx-auto"></div>
                     <button id="playAgainBtn" class="action-button-original block mx-auto mt-8">Play Again</button>
                 </div>
@@ -485,7 +485,7 @@
                 if (gameTitleH1) gameTitleH1.classList.add('hidden');
                 if (instructionsP) instructionsP.classList.add('hidden');
                 const winnerMessage = viableCountries.length === 1 && viableCountries[0].losses < 2 
-                    ? `${viableCountries[0].fictionalName} is the Winner!` 
+                    ? `${viableCountries[0].realName} is the Winner!` 
                     : "Tournament Ended";
                 showResults(viableCountries, winnerMessage);
                 return;
@@ -667,6 +667,7 @@
 
                 sortedCountriesForDisplay.forEach((country, index) => {
                     const listItem = document.createElement('li');
+                    // Show trophy for the winner in the list
                     const isWinner = finalists && finalists.length === 1 && finalists[0].realName === country.realName && finalists[0].losses < 2;
                     const timeText = country.score === 1 ? 'time' : 'times';
                     let rankBadgeContent = index + 1;
@@ -697,16 +698,8 @@
                  rankedList_ol.innerHTML = "<li>No choices were made or no countries remained.</li>";
             }
             
-            analysisArea_div.innerHTML = ''; // Clear any existing content
-            if (endReasonMessage) {
-                const isWinner = endReasonMessage.includes("is the Winner!");
-                const textSize = isWinner ? 'text-3xl' : 'text-2xl';
-                analysisArea_div.innerHTML = `
-                    <h1 class="${textSize} font-black text-center text-gray-900 mb-2">
-                        ${endReasonMessage}
-                    </h1>
-                `;
-            }
+            // Clear analysis area - we'll only show comparison content here
+            analysisArea_div.innerHTML = generateChoiceAnalysis();
             
             if (topChoiceForComparison) {
                  comparisonSection_div.innerHTML = generateComparisonHTML(topChoiceForComparison);
