@@ -6,12 +6,185 @@
     <title>Rawls' Original Position Game</title>
     <link crossorigin="" href="https://fonts.gstatic.com/" rel="preconnect"/>
     <link as="style" href="https://fonts.googleapis.com/css2?display=swap&family=Noto+Sans%3Awght%40400%3B500%3B700%3B900&family=Public+Sans%3Awght%40400%3B500%3B600%3B700%3B800&family=Material+Symbols+Outlined%3Aopsz%2Cwght%2CFILL%2CGRAD%4020..48%2C100..700%2C0..1%2C-50..200" onload="this.rel='stylesheet'" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/> 
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link rel="stylesheet" href="style.css">
-    <link rel="manifest" href="manifest.json">
+    <style>
+        /* Forceful winner text styles */
+        #analysisArea h1.winner-heading,
+        #analysisArea h1.winner-heading * {
+            font-size: 6rem !important;
+            font-weight: 900 !important;
+            color: #000000 !important;
+            text-align: center !important;
+            margin: 0 auto !important;
+            padding: 20px 0 !important;
+            line-height: 1.2 !important;
+            width: 100% !important;
+            display: block !important;
+        }
+
+        .material-symbols-outlined { 
+            font-variation-settings:
+                'FILL' 0,
+                'wght' 400,
+                'GRAD' 0,
+                'opsz' 24;
+            vertical-align: middle;
+        }
+        .material-icons { /* General alignment for material icons */
+            vertical-align: middle;
+        }
+
+        body {
+            font-family: "Public Sans", "Noto Sans", sans-serif;
+            min-height: max(884px, 100dvh);
+        }
+
+        .country-card-wrapper { 
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            width: 100%;
+        }
+        .country-card-wrapper:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+        }
+
+        .stat-bar-container {
+            display: flex;
+            align-items: flex-end;
+            height: 22px; 
+            gap: 3px;
+        }
+        .stat-bar {
+            width: 8px; 
+            border-radius: 2px;
+        }
+        .horizontal-bar-bg {
+            height: 18px;
+            background-color: #E5E7EB;
+            border-radius: 0.25rem;
+            overflow: hidden;
+            width: 100%; 
+        }
+        .horizontal-bar-fill {
+            height: 100%;
+            background-color: #9CA3AF; 
+            border-radius: 0.25rem;
+        }
+        .action-button { 
+            background-color: #1E40AF;
+            color: white; font-weight: 600; padding: 0.75rem 1.5rem; border-radius: 0.125rem;
+            cursor: pointer; transition: all 0.2s; border: none; outline: none;
+            box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            position: relative;
+            top: 0;
+        }
+        .action-button:hover { 
+            background-color: #1E3A8A; 
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            top: -1px;
+        }
+        .action-button:active {
+            top: 1px;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        }
+        
+        footer ul {
+            margin-top: 0;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .bounce-animation {
+            animation: bounce 0.5s ease 10; /* 10 iterations * 0.5s = 5s total */
+        }
+        
+        #winner-text {
+            font-size: 6rem !important;
+            font-weight: 900 !important;
+            color: #000000 !important;
+            text-align: center !important;
+            margin: 0 auto !important;
+            padding: 20px 0 !important;
+            line-height: 1.2 !important;
+        }
+        
+        .winner-text {
+            font-size: 6rem !important; /* Increased size */
+            font-weight: 900 !important;
+            color: #000000 !important; /* Pure black */
+            display: block !important;
+            margin: 0 auto !important;
+            text-align: center !important;
+            line-height: 1.2 !important;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1) !important;
+            margin-bottom: 1rem !important;
+            padding: 0 !important;
+            max-width: 100% !important;
+            overflow: visible !important;
+        }
+
+        /* Original Results Area Styling (Reverted to) */
+        #resultsArea ol li { /* Changed from #resultsAreaLegacy to #resultsArea */
+            background-color: #fff; padding: 0.75rem 1rem; border-radius: 0.375rem;
+            box-shadow: 0 1px 3px 0 rgba(0,0,0,0.1), 0 1px 2px 0 rgba(0,0,0,0.06);
+            margin-bottom: 0.5rem;
+        }
+        #resultsArea ol li .rank-badge { /* Changed from #resultsAreaLegacy to #resultsArea */
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 2rem; height: 2rem; line-height: 2rem; text-align: center;
+            border-radius: 50%;
+            background-color: #1E40AF;
+            color: white;
+            font-weight: bold; margin-right: 0.75rem;
+        }
+        .eliminated-text { color: #EF4444; font-style: italic; font-size: 0.875rem; }
+
+        #analysisArea, #comparisonSection { /* These are the containers for results content */
+            margin-top: 2rem; padding: 1.5rem; background-color: #fff;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+        }
+        #analysisArea h3, #comparisonSection h3 {
+            font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem; color: #374151;
+        }
+        #analysisArea p, #comparisonSection p {
+            font-size: 0.95rem; line-height: 1.6; color: #4B5563; margin-bottom: 0.5rem;
+        }
+         #analysisArea ul { list-style-type: disc; margin-left: 1.5rem; margin-bottom: 0.75rem; }
+         #analysisArea ul li { margin-bottom: 0.25rem; }
+
+        #comparisonTable { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+        #comparisonTable th, #comparisonTable td {
+            text-align: left; padding: 0.5rem 0.75rem; border-bottom: 1px solid #e5e7eb;
+        }
+        #comparisonTable th { background-color: #f9fafb; font-weight: 500; color: #4b5563; }
+        #comparisonTable td:nth-child(1) { font-weight: 500; color: #374151; }
+        #comparisonTable td { font-size: 0.9rem; }
+
+        .positive-tendency { color: #16A34A; }
+        .negative-tendency { color: #DC2626; }
+
+        .action-button-original { /* For the reverted "Play Again" button */
+            background-color: #1E40AF;
+            color: white; font-weight: 600; padding: 0.75rem 1.5rem; border-radius: 0.5rem;
+            cursor: pointer; transition: background-color 0.2s; border: none; outline: none;
+        }
+        .action-button-original:hover { background-color: #1E3A8A; }
+
+        .veil-gradient {
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.6) 100%);
+        }
+    </style>
 </head>
-<body class="bg-slate-50">
+<body class="bg-slate-50"> 
 
     <div id="onboardingScreen" class="relative flex size-full min-h-screen flex-col justify-between group/design-root overflow-x-hidden">
         <div class="flex flex-col flex-grow">
@@ -53,7 +226,7 @@
         </div>
         <footer class="bg-white border-t border-slate-200 p-4 sticky bottom-0 z-10">
             <div class="container mx-auto">
-                <button id="startGameOnboardingBtn" class="w-full flex items-center justify-center rounded-xl h-14 px-6 bg-[#3d98f4] text-white text-lg font-semibold tracking-wide shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-150">
+                <button id="startGameOnboardingBtn" class="w-full flex items-center justify-center rounded-lg h-14 px-6 bg-blue-400 text-white text-lg font-semibold tracking-wide shadow-md hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 transition-colors duration-150">
                     <span>Start Game</span>
                 </button>
             </div>
@@ -64,7 +237,7 @@
         <div class="flex-grow">
             <header class="sticky top-0 z-30 bg-white shadow-sm">
                 <div class="flex items-center p-4 max-w-screen-lg mx-auto">
-                    <button class="text-gray-700 hover:text-gray-900 p-2 -ml-2" onclick="history.back()" title="Go Back">
+                    <button id="backButton" class="text-gray-700 hover:text-gray-900 p-2 -ml-2" title="Go Back">
                         <span class="material-symbols-outlined">arrow_back_ios_new</span>
                     </button>
                     <h1 class="flex-1 text-center text-xl font-semibold text-gray-800 pr-8">Choose a Country</h1>
@@ -88,9 +261,9 @@
                         </div>
                     </div>
                 </div>
-                <div id="resultsArea" class="hidden mt-10 container mx-auto px-4 max-w-screen-md">
-                    <h2 class="text-3xl font-bold mb-6 text-center text-gray-700">Your Country Preferences</h2>
-                    <ol id="rankedList" class="max-w-lg mx-auto space-y-2"></ol>
+                <div id="resultsArea" class="hidden mt-4 container mx-auto px-4 max-w-screen-md">
+                    <h2 class="text-base font-semibold mb-2 text-center text-gray-600">Your Country Preferences</h2>
+                    <ol id="rankedList" class="max-w-lg mx-auto space-y-4 mt-6"></ol>
                     <div id="analysisArea" class="max-w-2xl mx-auto"></div>
                     <div id="comparisonSection" class="max-w-2xl mx-auto"></div>
                     <button id="playAgainBtn" class="action-button-original block mx-auto mt-8">Play Again</button>
@@ -98,18 +271,489 @@
             </main>
         </div>
 
-        <footer class="container mx-auto px-4 py-8 mt-8 border-t border-gray-300 text-xs text-gray-500 text-center">
-            <p class="mb-1"><strong>Data Sources:</strong></p>
-            <ul class="list-disc list-inside inline-block text-left">
-                <li>Life Expectancy, Homicide Rate, Infant Mortality Rate: <a href="https://www.who.int/data/gho" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline">World Health Organization (WHO GHO data)</a>.</li>
-                <li>Median equivalised income (PPP USD), Poverty Rate, Foreign-Born Population: OECD data.</li>
-            </ul>
+        <footer class="container mx-auto px-4 py-8 mt-8 border-t border-gray-300 text-xs text-gray-500">
+            <div class="max-w-2xl mx-auto pl-5">
+                <p class="font-semibold -ml-1 mb-1">Data Sources:</p>
+                <ul class="list-disc list-inside">
+                    <li class="pl-1">Life Expectancy, Homicide Rate, Infant Mortality Rate: <a href="https://www.who.int/data/gho" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline">World Health Organization (WHO GHO data)</a>.</li>
+                    <li class="pl-1">Median equivalised income (PPP USD), Poverty Rate, Foreign-Born Population: OECD data.</li>
+                </ul>
+            </div>
         </footer>
     </div>
     <div id="resultsScreen_div_unused" class="hidden relative flex size-full min-h-screen flex-col justify-between group/design-root overflow-x-hidden bg-slate-50">
         {/* Content of the new results page was here, now removed from active flow */}
     </div>
 
-    <script src="script.js" defer></script>
+
+    <script>
+        // --- DOM ELEMENTS ---
+        const onboardingScreen_div = document.getElementById('onboardingScreen');
+        const mainAppScreen_div = document.getElementById('mainAppScreen');
+        // const resultsScreen_div = document.getElementById('resultsScreen_div_unused'); // No longer primary results screen
+        const startGameOnboardingBtn = document.getElementById('startGameOnboardingBtn');
+
+        const gameArea = document.getElementById('gameArea');
+        const resultsArea = document.getElementById('resultsArea'); // Reverted to original results area
+        const countryCardA_div = document.getElementById('countryCardA');
+        const countryCardB_div = document.getElementById('countryCardB');
+        const progressArea = document.getElementById('progressArea');
+        
+        const rankedList_ol = document.getElementById('rankedList'); // Reverted to original ranked list
+        const analysisArea_div = document.getElementById('analysisArea'); // Reverted
+        const comparisonSection_div = document.getElementById('comparisonSection'); // Reverted
+        const playAgainBtn = document.getElementById('playAgainBtn'); // Reverted to original play again button
+
+        const instructionsP = document.getElementById('gameInstructions');
+        const gameTitleH1 = document.getElementById('gameTitle');
+
+
+        // --- DATA ---
+        const baseCountryProfiles = [
+            { realName: "Australia",      stats: { lifeExpectancy: 83.2, povertyRate: 12.3, homicideRate: 0.9, infantMortality: 3.3,  foreignBorn: 30.7, medianIncome: 36835 }},
+            { realName: "Canada",         stats: { lifeExpectancy: 81.3, povertyRate: 11.2, homicideRate: 2.1, infantMortality: 4.4,  foreignBorn: 23.0, medianIncome: 39388 }},
+            { realName: "Denmark",        stats: { lifeExpectancy: 81.3, povertyRate: 5.6,  homicideRate: 1.0, infantMortality: 3.1,  foreignBorn: 14.1, medianIncome: 34061 }},
+            { realName: "France",         stats: { lifeExpectancy: 82.2, povertyRate: 8.4,  homicideRate: 1.3, infantMortality: 3.2,  foreignBorn: 13.1, medianIncome: 30622 }},
+            { realName: "Germany",        stats: { lifeExpectancy: 80.7, povertyRate: 9.8,  homicideRate: 0.8, infantMortality: 3.2,  foreignBorn: 19.8, medianIncome: 35537 }},
+            { realName: "Netherlands",    stats: { lifeExpectancy: 81.7, povertyRate: 7.5,  homicideRate: 0.7, infantMortality: 3.4,  foreignBorn: 15.6, medianIncome: 35891 }},
+            { realName: "Sweden",         stats: { lifeExpectancy: 83.1, povertyRate: 6.8,  homicideRate: 1.2, infantMortality: 1.9,  foreignBorn: 20.5, medianIncome: 33472 }},
+            { realName: "Switzerland",    stats: { lifeExpectancy: 83.8, povertyRate: 10.4, homicideRate: 0.6, infantMortality: 3.5,  foreignBorn: 30.0, medianIncome: 39698 }},
+            { realName: "United Kingdom", stats: { lifeExpectancy: 80.8, povertyRate: 11.7, homicideRate: 1.1, infantMortality: 4.0,  foreignBorn: 17.0, medianIncome: 26884 }},
+            { realName: "United States",  stats: { lifeExpectancy: 76.9, povertyRate: 18.0, homicideRate: 5.8, infantMortality: 5.4,  foreignBorn: 15.6, medianIncome: 48625 }}
+        ];
+        const fictionalNamePool = [
+            "AETHELGARD", "BORELIA", "CASPIA", "DRAKON", "ELARA", "FAELAN", "GWYN", "HYPERIA", "IRIDIA", "JORIN",
+            "KRYLLOS", "LYRA", "MYRRIDON", "NEXARA", "ORIONIS", "PYRALIS", "QUORUM", "RHIVANA", "SOLARA", "TERRA NOVA"
+        ];
+
+        // --- GAME STATE ---
+        let activeCountries = [];
+        let userCountryScores = {};
+        let chosenCountryStatsHistory = [];
+        let currentRound = 0;
+
+        // --- UTILITY FUNCTIONS ---
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function getTimesFaced(country1, country2) {
+            if (!country1.opponentsFaced || !country2.opponentsFaced) return 0;
+            return country1.opponentsFaced[country2.realName] || 0;
+        }
+
+        function areBothAmongLowestLosses(country1, country2, allViableCountries) {
+            if (allViableCountries.length === 0) return false;
+            let minLosses = Infinity;
+            allViableCountries.forEach(c => { if (c.losses < minLosses) minLosses = c.losses; });
+            return country1.losses === minLosses && country2.losses === minLosses;
+        }
+
+        function getBarRating(value, statKey, isPositiveGood) {
+            const allValues = baseCountryProfiles
+                .map(c => c.stats[statKey])
+                .filter(v => typeof v === 'number' && !isNaN(v));
+
+            if (allValues.length === 0) return { barCount: 3, colorClass: 'bg-yellow-400' };
+            
+            const minVal = Math.min(...allValues);
+            const maxVal = Math.max(...allValues);
+
+            if (minVal === maxVal) return { barCount: 3, colorClass: 'bg-yellow-400' };
+            
+            let normalizedValue;
+            if (isPositiveGood) {
+                normalizedValue = (value - minVal) / (maxVal - minVal);
+            } else { 
+                normalizedValue = (maxVal - value) / (maxVal - minVal);
+            }
+            
+            normalizedValue = Math.max(0, Math.min(1, normalizedValue));
+            let barCount = Math.round(1 + normalizedValue * 5); 
+            barCount = Math.max(1, Math.min(6, barCount)); 
+
+            let colorClass;
+            if (barCount >= 5) colorClass = 'bg-green-500';      
+            else if (barCount >= 3) colorClass = 'bg-yellow-400'; 
+            else colorClass = 'bg-red-500';                     
+            
+            return { barCount, colorClass };
+        }
+        
+        function generateVerticalBarsHTML(barCount, colorClass) {
+            let barsHTML = '<div class="stat-bar-container w-[63px] justify-start">';
+            for (let i = 0; i < barCount; i++) {
+                barsHTML += `<div class="stat-bar ${colorClass}" style="height: 18px;"></div>`;
+            }
+            return barsHTML + '</div>';
+        }
+
+        function generateHorizontalBarHTML(percentage) {
+            const validPercentage = Math.max(0, Math.min(100, percentage));
+            return `
+                <div class="stat-bar-container w-[63px] justify-start items-center">
+                    <div class="horizontal-bar-bg">
+                        <div class="horizontal-bar-fill" style="width: ${validPercentage}%;"></div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        const statLabels = { 
+            lifeExpectancy: "Life Expectancy (yrs)",
+            medianIncome: "Median Income ($)",
+            povertyRate: "Poverty Rate (%)",
+            homicideRate: "Homicide Rate (per /100k)",
+            infantMortality: "Infant Mortality (per /1k)",
+            foreignBorn: "Foreign-Born (%)"
+        };
+
+        function createCountryCardHTML_Tournament(country, _currentViablePool_ignored) {
+            const leRating = getBarRating(country.stats.lifeExpectancy, 'lifeExpectancy', true);
+            const incomeRating = getBarRating(country.stats.medianIncome, 'medianIncome', true);
+            const povertyRating = getBarRating(country.stats.povertyRate, 'povertyRate', false);
+            const homicideRating = getBarRating(country.stats.homicideRate, 'homicideRate', false);
+            const imRating = getBarRating(country.stats.infantMortality, 'infantMortality', false);
+            
+            const lossesText = country.losses > 0 
+                ? `<p class="text-xs text-gray-500 text-center mb-0.5">Losses: ${country.losses}</p>` 
+                : '<p class="text-xs text-gray-500 text-center mb-0.5 h-[18px]"></p>';
+
+            return `
+                <div> 
+                    ${lossesText}
+                    <h2 class="text-2xl font-bold uppercase text-blue-800 mb-2 text-center">${country.fictionalName}</h2>
+                    <div class="space-y-3 text-sm text-gray-700">
+                        <div class="flex justify-between items-center"><span>Life Expectancy: ${country.stats.lifeExpectancy.toFixed(1)} yrs</span>${generateVerticalBarsHTML(leRating.barCount, leRating.colorClass)}</div>
+                        <div class="flex justify-between items-center"><span>Median Income: $${country.stats.medianIncome.toLocaleString()}</span>${generateVerticalBarsHTML(incomeRating.barCount, incomeRating.colorClass)}</div>
+                        <div class="flex justify-between items-center"><span>Poverty Rate: ${country.stats.povertyRate.toFixed(1)}%</span>${generateVerticalBarsHTML(povertyRating.barCount, povertyRating.colorClass)}</div>
+                        <div class="flex justify-between items-center"><span>Homicide Rate: ${country.stats.homicideRate.toFixed(1)}/100k</span>${generateVerticalBarsHTML(homicideRating.barCount, homicideRating.colorClass)}</div>
+                        <div class="flex justify-between items-center"><span>Infant Mortality: ${country.stats.infantMortality.toFixed(1)}/1k</span>${generateVerticalBarsHTML(imRating.barCount, imRating.colorClass)}</div>
+                        <div class="flex justify-between items-center"><span>Foreign-Born: ${country.stats.foreignBorn.toFixed(1)}%</span>${generateHorizontalBarHTML(country.stats.foreignBorn)}</div>
+                    </div>
+                </div>
+                <button class="action-button w-full mt-6 select-country-btn" data-country-realname="${country.realName}">
+                    Choose ${country.fictionalName}
+                </button>
+            `;
+        }
+
+
+        // --- GAME LOGIC ---
+        function startGame() { 
+            shuffleArray(fictionalNamePool);
+            userCountryScores = {};
+            chosenCountryStatsHistory = [];
+
+            activeCountries = baseCountryProfiles.map((profile, index) => {
+                userCountryScores[profile.realName] = 0;
+                return {
+                    ...profile,
+                    stats: { ...profile.stats },
+                    fictionalName: fictionalNamePool[index % fictionalNamePool.length],
+                    losses: 0,
+                    opponentsFaced: {}
+                };
+            });
+
+            currentRound = 0;
+            mainAppScreen_div.classList.remove('hidden');
+            onboardingScreen_div.classList.add('hidden');
+            // resultsScreen_div.classList.add('hidden'); // Ensure new results screen is hidden
+            resultsArea.classList.add('hidden'); // Ensure old results area is hidden
+            document.body.classList.remove('bg-slate-50');
+            document.body.classList.add('bg-gray-100');
+
+
+            gameArea.classList.remove('hidden'); 
+            progressArea.textContent = '';
+
+            if (gameTitleH1) gameTitleH1.classList.remove('hidden');
+            if (instructionsP) instructionsP.classList.remove('hidden');
+
+            nextComparison();
+        }
+
+        function nextComparison() {
+            currentRound++;
+            const viableCountries = activeCountries.filter(c => c.losses < 2);
+
+            if (viableCountries.length < 2) {
+                if (gameTitleH1) gameTitleH1.classList.add('hidden');
+                if (instructionsP) instructionsP.classList.add('hidden');
+                const winnerMessage = viableCountries.length === 1 && viableCountries[0].losses < 2 
+                    ? `${viableCountries[0].fictionalName} is the Winner!` 
+                    : "Tournament Ended";
+                showResults(viableCountries, winnerMessage);
+                return;
+            }
+            progressArea.textContent = `Round ${currentRound}`;
+
+            let possiblePairs = [];
+            for (let i = 0; i < viableCountries.length; i++) {
+                for (let j = i + 1; j < viableCountries.length; j++) {
+                    const c1 = viableCountries[i]; const c2 = viableCountries[j];
+                    const timesFaced = getTimesFaced(c1, c2);
+                    let canPlay = (timesFaced < 2) || (timesFaced === 2 && areBothAmongLowestLosses(c1, c2, viableCountries));
+                    if (canPlay) possiblePairs.push({ countryA: c1, countryB: c2 });
+                }
+            }
+
+            if (possiblePairs.length === 0) {
+                if (gameTitleH1) gameTitleH1.classList.add('hidden');
+                if (instructionsP) instructionsP.classList.add('hidden');
+                showResults(viableCountries, "No more valid matchups. Tournament ended.");
+                return;
+            }
+
+            const selectedPair = possiblePairs[Math.floor(Math.random() * possiblePairs.length)];
+
+            countryCardA_div.innerHTML = createCountryCardHTML_Tournament(selectedPair.countryA);
+            countryCardB_div.innerHTML = createCountryCardHTML_Tournament(selectedPair.countryB);
+
+            document.querySelectorAll('.select-country-btn').forEach(button => {
+                const newButton = button.cloneNode(true); 
+                button.parentNode.replaceChild(newButton, button);
+                newButton.addEventListener('click', (event) => handleChoiceTournament(event, selectedPair.countryA, selectedPair.countryB));
+            });
+        }
+
+        function handleChoiceTournament(event, countryA, countryB) {
+            if (gameTitleH1) gameTitleH1.classList.add('hidden');
+            if (instructionsP) instructionsP.classList.add('hidden');
+
+            const chosenRealName = event.target.dataset.countryRealname;
+            let winner, loser;
+
+            if (countryA.realName === chosenRealName) {
+                winner = countryA; loser = countryB;
+            } else {
+                winner = countryB; loser = countryA;
+            }
+
+            userCountryScores[winner.realName]++;
+            chosenCountryStatsHistory.push({...winner.stats}); 
+
+            const loserInActive = activeCountries.find(c => c.realName === loser.realName);
+            const winnerInActive = activeCountries.find(c => c.realName === winner.realName);
+
+            if (loserInActive) loserInActive.losses++;
+            
+            if (winnerInActive && loserInActive) {
+                winnerInActive.opponentsFaced[loserInActive.realName] = (winnerInActive.opponentsFaced[loserInActive.realName] || 0) + 1;
+                loserInActive.opponentsFaced[winnerInActive.realName] = (loserInActive.opponentsFaced[winnerInActive.realName] || 0) + 1;
+            }
+            nextComparison();
+        }
+
+        // --- RESULTS PAGE FUNCTIONS (Reverted to original logic) ---
+        function generateChoiceAnalysis() {
+            if (chosenCountryStatsHistory.length === 0) {
+                return "<h3>Analysis of Your Choices</h3><p>No choices were made to analyze.</p>";
+            }
+            const numChoices = chosenCountryStatsHistory.length;
+            const avgChosenStats = {
+                lifeExpectancy: chosenCountryStatsHistory.reduce((sum, s) => sum + s.lifeExpectancy, 0) / numChoices,
+                medianIncome: chosenCountryStatsHistory.reduce((sum, s) => sum + s.medianIncome, 0) / numChoices,
+                povertyRate: chosenCountryStatsHistory.reduce((sum, s) => sum + s.povertyRate, 0) / numChoices,
+                homicideRate: chosenCountryStatsHistory.reduce((sum, s) => sum + s.homicideRate, 0) / numChoices,
+                infantMortality: chosenCountryStatsHistory.reduce((sum, s) => sum + s.infantMortality, 0) / numChoices,
+            };
+            const numTotalCountries = baseCountryProfiles.length;
+            const overallAvgStats = {
+                lifeExpectancy: baseCountryProfiles.reduce((sum, c) => sum + c.stats.lifeExpectancy, 0) / numTotalCountries,
+                medianIncome: baseCountryProfiles.reduce((sum, c) => sum + c.stats.medianIncome, 0) / numTotalCountries,
+                povertyRate: baseCountryProfiles.reduce((sum, c) => sum + c.stats.povertyRate, 0) / numTotalCountries,
+                homicideRate: baseCountryProfiles.reduce((sum, c) => sum + c.stats.homicideRate, 0) / numTotalCountries,
+                infantMortality: baseCountryProfiles.reduce((sum, c) => sum + c.stats.infantMortality, 0) / numTotalCountries,
+            };
+            let analysisHTML = "<h3>Analysis of Your Choices</h3>";
+            let findings = [];
+            const SIGNIFICANCE_THRESHOLD = 0.05; 
+
+            if (((avgChosenStats.lifeExpectancy / overallAvgStats.lifeExpectancy) - 1) > SIGNIFICANCE_THRESHOLD) findings.push(`You tended towards a <strong class="positive-tendency">higher Life Expectancy</strong> (avg. chosen: ${avgChosenStats.lifeExpectancy.toFixed(1)} yrs vs. overall avg: ${overallAvgStats.lifeExpectancy.toFixed(1)} yrs).`);
+            if (((avgChosenStats.medianIncome / overallAvgStats.medianIncome) - 1) > SIGNIFICANCE_THRESHOLD) findings.push(`You tended towards a <strong class="positive-tendency">higher Median Income</strong> (avg. chosen: $${avgChosenStats.medianIncome.toLocaleString()} vs. overall avg: $${overallAvgStats.medianIncome.toLocaleString()}).`);
+            if ((1 - (avgChosenStats.povertyRate / overallAvgStats.povertyRate)) > SIGNIFICANCE_THRESHOLD) findings.push(`You tended towards a <strong class="positive-tendency">lower Poverty Rate</strong> (avg. chosen: ${avgChosenStats.povertyRate.toFixed(1)}% vs. overall avg: ${overallAvgStats.povertyRate.toFixed(1)}%).`);
+            else if (((avgChosenStats.povertyRate / overallAvgStats.povertyRate) - 1) > SIGNIFICANCE_THRESHOLD) findings.push(`Your choices often included countries with a <strong class="negative-tendency">higher Poverty Rate</strong> (avg. chosen: ${avgChosenStats.povertyRate.toFixed(1)}% vs. overall avg: ${overallAvgStats.povertyRate.toFixed(1)}%).`);
+            if ((1 - (avgChosenStats.homicideRate / overallAvgStats.homicideRate)) > SIGNIFICANCE_THRESHOLD) findings.push(`You tended towards a <strong class="positive-tendency">lower Homicide Rate</strong> (avg. chosen: ${avgChosenStats.homicideRate.toFixed(1)}/100k vs. overall avg: ${overallAvgStats.homicideRate.toFixed(1)}/100k).`);
+            else if (((avgChosenStats.homicideRate / overallAvgStats.homicideRate) - 1) > SIGNIFICANCE_THRESHOLD) findings.push(`Your choices often included countries with a <strong class="negative-tendency">higher Homicide Rate</strong> (avg. chosen: ${avgChosenStats.homicideRate.toFixed(1)}/100k vs. overall avg: ${overallAvgStats.homicideRate.toFixed(1)}/100k).`);
+            if ((1 - (avgChosenStats.infantMortality / overallAvgStats.infantMortality)) > SIGNIFICANCE_THRESHOLD) findings.push(`You tended towards a <strong class="positive-tendency">lower Infant Mortality Rate</strong> (avg. chosen: ${avgChosenStats.infantMortality.toFixed(1)}/1k vs. overall avg: ${overallAvgStats.infantMortality.toFixed(1)}/1k).`);
+            else if (((avgChosenStats.infantMortality / overallAvgStats.infantMortality) - 1) > SIGNIFICANCE_THRESHOLD) findings.push(`Your choices often included countries with a <strong class="negative-tendency">higher Infant Mortality Rate</strong> (avg. chosen: ${avgChosenStats.infantMortality.toFixed(1)}/1k vs. overall avg: ${overallAvgStats.infantMortality.toFixed(1)}/1k).`);
+            
+            if (findings.length > 0) {
+                analysisHTML += "<ul>";
+                findings.forEach(finding => { analysisHTML += `<li>${finding}</li>`; });
+                analysisHTML += "</ul>";
+            } else {
+                analysisHTML += "<p>Your choices didn't show a strong deviation from the average across the key statistics.</p>";
+            }
+            analysisHTML += `<p class="text-xs text-gray-500 mt-3">(Note: This is a simplified analysis based on averages of your choices compared to the overall dataset.)</p>`;
+            return analysisHTML;
+        }
+
+        function generateComparisonHTML(topChoiceRealName) {
+            const topCountry = baseCountryProfiles.find(c => c.realName === topChoiceRealName);
+            const usCountry = baseCountryProfiles.find(c => c.realName === "United States"); 
+            if (!topCountry) return "<h3>Comparison Data Unavailable</h3><p>Could not retrieve data for your top choice.</p>";
+            if (!usCountry && topChoiceRealName === "United States") return "<h3>Comparison Data</h3><p>Your top choice is the United States. No further comparison target set.</p>"
+            if (!usCountry) return `<h3>Comparison: ${topCountry.realName}</h3><p>Data for United States not available for comparison.</p>`;
+
+            const formatStat = (value, unit = '', decimals = 1, prefix = '') => {
+                 if (typeof value !== 'number' || isNaN(value)) return 'N/A';
+                 const formattedValue = unit === '$' ? value.toLocaleString() : value.toFixed(decimals);
+                 return `${prefix}${formattedValue}${unit && unit !== '$' ? unit : ''}`;
+            };
+            let comparisonHTML = `<h3>Comparison: Your Top Preference vs. United States</h3>`;
+             if (topChoiceRealName === "United States") {
+                comparisonHTML = `<h3>Your Top Preference: United States</h3>`;
+            }
+            comparisonHTML += `<table id="comparisonTable">
+                                <thead><tr><th>Statistic</th><th>${topCountry.realName}</th>${topChoiceRealName !== "United States" ? `<th>United States</th>` : ''}</tr></thead>
+                                <tbody>
+                                    <tr><td>Life Expectancy</td><td>${formatStat(topCountry.stats.lifeExpectancy, ' yrs')}</td>${topChoiceRealName !== "United States" ? `<td>${formatStat(usCountry.stats.lifeExpectancy, ' yrs')}</td>` : ''}</tr>
+                                    <tr><td>Median Income</td><td>${formatStat(topCountry.stats.medianIncome, '$', 0, '$')}</td>${topChoiceRealName !== "United States" ? `<td>${formatStat(usCountry.stats.medianIncome, '$', 0, '$')}</td>` : ''}</tr>
+                                    <tr><td>Poverty Rate</td><td>${formatStat(topCountry.stats.povertyRate, '%')}</td>${topChoiceRealName !== "United States" ? `<td>${formatStat(usCountry.stats.povertyRate, '%')}</td>` : ''}</tr>
+                                    <tr><td>Homicide Rate</td><td>${formatStat(topCountry.stats.homicideRate, '/100k')}</td>${topChoiceRealName !== "United States" ? `<td>${formatStat(usCountry.stats.homicideRate, '/100k')}</td>` : ''}</tr>
+                                    <tr><td>Infant Mortality</td><td>${formatStat(topCountry.stats.infantMortality, '/1k')}</td>${topChoiceRealName !== "United States" ? `<td>${formatStat(usCountry.stats.infantMortality, '/1k')}</td>` : ''}</tr>
+                                    <tr><td>Foreign-Born</td><td>${formatStat(topCountry.stats.foreignBorn, '%')}</td>${topChoiceRealName !== "United States" ? `<td>${formatStat(usCountry.stats.foreignBorn, '%')}</td>` : ''}</tr>
+                                </tbody></table>`;
+            return comparisonHTML;
+        }
+
+
+        function showResults(finalists, endReasonMessage = "Tournament Concluded") {
+            gameArea.classList.add('hidden'); // Hide game cards
+            resultsArea.classList.remove('hidden'); // Show the original results area
+            // Ensure other screens are hidden
+            onboardingScreen_div.classList.add('hidden');
+            // resultsScreen_div.classList.add('hidden'); // The new results screen is not used
+
+            document.body.classList.remove('bg-slate-50'); // Ensure correct body bg
+            document.body.classList.add('bg-gray-100');   
+
+            progressArea.textContent = endReasonMessage; 
+            analysisArea_div.innerHTML = generateChoiceAnalysis();
+
+            const sortedCountriesForDisplay = activeCountries
+                .map(country => ({
+                    ...country,
+                    score: userCountryScores[country.realName] || 0,
+                    isEliminated: country.losses >= 2
+                }))
+                .sort((a, b) => { 
+                    // First, sort by elimination status (non-eliminated first)
+                    if (a.isEliminated !== b.isEliminated) {
+                        return a.isEliminated ? 1 : -1;
+                    }
+                    // Then by score (highest first)
+                    if (b.score !== a.score) return b.score - a.score;
+                    // Finally by fewest losses
+                    return a.losses - b.losses; 
+                });
+
+            rankedList_ol.innerHTML = ''; 
+            let topChoiceForComparison = null;
+
+            if (sortedCountriesForDisplay.length > 0) {
+                const potentialTopChoices = sortedCountriesForDisplay.filter(c => !c.isEliminated);
+                if (potentialTopChoices.length > 0) {
+                    topChoiceForComparison = potentialTopChoices[0].realName;
+                } else {
+                    topChoiceForComparison = sortedCountriesForDisplay[0].realName; 
+                }
+
+                sortedCountriesForDisplay.forEach((country, index) => {
+                    const listItem = document.createElement('li');
+                    const isWinner = finalists && finalists.length === 1 && finalists[0].realName === country.realName && finalists[0].losses < 2;
+                    const timeText = country.score === 1 ? 'time' : 'times';
+                    let rankBadgeContent = index + 1;
+
+                    if (isWinner) {
+                        rankBadgeContent = '🏆';
+                        listItem.className = 'flex items-center bounce-animation';
+                    } else {
+                        listItem.className = 'flex items-center';
+                    }
+                    
+                    let eliminatedText = country.isEliminated ? ' <span class="eliminated-text">(Eliminated)</span>' : '';
+                    
+                    listItem.innerHTML = `
+                        <span class="rank-badge">${rankBadgeContent}</span>
+                        <div class="flex flex-col">
+                            <div class="flex justify-between items-center w-full">
+                                <span><strong class="font-semibold">${country.realName}</strong> (${country.fictionalName})${eliminatedText}</span>
+                            </div>
+                            <div class="w-full text-right text-gray-600 text-sm mt-1 pr-4">
+                                Chosen: ${country.score} ${timeText} • Losses: ${country.losses}
+                            </div>
+                        </div>
+                    `;
+                    rankedList_ol.appendChild(listItem);
+                });
+            } else {
+                 rankedList_ol.innerHTML = "<li>No choices were made or no countries remained.</li>";
+            }
+            
+            analysisArea_div.innerHTML = ''; // Clear any existing content
+            if (endReasonMessage) {
+                const isWinner = endReasonMessage.includes("is the Winner!");
+                const textSize = isWinner ? 'text-3xl' : 'text-2xl';
+                analysisArea_div.innerHTML = `
+                    <h1 class="${textSize} font-black text-center text-gray-900 mb-2">
+                        ${endReasonMessage}
+                    </h1>
+                `;
+            }
+            
+            if (topChoiceForComparison) {
+                 comparisonSection_div.innerHTML = generateComparisonHTML(topChoiceForComparison);
+            } else {
+                 comparisonSection_div.innerHTML = "<p class='text-center text-gray-600'>No top choice to compare.</p>";
+            }
+        }
+
+        // --- ONBOARDING & APP INITIALIZATION ---
+        function initializeApp() {
+            mainAppScreen_div.classList.add('hidden'); 
+            resultsArea.classList.add('hidden'); // Hide old results area initially
+            // resultsScreen_div.classList.add('hidden'); // Hide new results screen initially
+            onboardingScreen_div.classList.remove('hidden'); 
+            document.body.className = 'bg-slate-50'; 
+
+
+            if (startGameOnboardingBtn) {
+                startGameOnboardingBtn.addEventListener('click', () => {
+                    startGame(); 
+                });
+            } else { 
+                startGame();
+            }
+        }
+        
+        // --- EVENT LISTENERS ---
+        // Add back button functionality
+        const backButton = document.getElementById('backButton');
+        if (backButton) {
+            backButton.addEventListener('click', function() {
+                onboardingScreen_div.classList.remove('hidden');
+                mainAppScreen_div.classList.add('hidden');
+            });
+        }
+        
+        // The original playAgainBtn is part of the resultsArea, which is dynamically shown/hidden
+        // Its event listener is added once when the DOM elements are defined.
+        if(playAgainBtn){
+            playAgainBtn.addEventListener('click', () => {
+                // No need to manage onboarding/results screen here, startGame handles it
+                startGame();
+            });
+        }
+        
+        // --- INITIALIZE APP FLOW ---
+        initializeApp(); 
+    </script>
 </body>
 </html>
