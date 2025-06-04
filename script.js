@@ -117,7 +117,7 @@ const statLabels = {
     lifeExpectancy: "Life Expectancy (yrs)",
     medianIncome: "Median Income ($)",
     povertyRate: "Poverty Rate (%)",
-    homicideRate: "Homicide Rate (per /100k)",
+    homicideRate: "Homicide Rate (per 100k)",
     infantMortality: "Infant Mortality (per /1k)",
     foreignBorn: "Foreign-Born (%)"
 };
