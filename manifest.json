@@ -2,7 +2,7 @@
   "name": "Rawls' Original Position Game",
   "short_name": "RawlsGame",
   "description": "A game demonstrating John Rawls' Veil of Ignorance concept from political philosophy.",
-  "start_url": "./Index.html",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#f1f5f9",
   "theme_color": "#1E40AF",
